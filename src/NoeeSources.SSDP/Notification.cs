@@ -1,0 +1,133 @@
+/*
+ * Copyright © 2022 by Renaud Guillard (dev@nore.fr)
+ * Distributed under the terms of the MIT License, see LICENSE
+ */
+
+using System;
+using System.Net.Http.Headers;
+
+namespace NoeeSources.SSDP
+{
+	/// <summary>
+	/// Notification message
+	/// </summary>
+	public class Notification : Message
+	{
+		/// <summary>
+		/// Notification type (NTS header field)
+		/// </summary>
+		/// <value>Value of the HTS header field.</value>
+		public string Type
+		{
+			get
+			{
+				return TryGetHeaderFieldValue("NTS", NotificationType.Alive);
+			}
+			set
+			{
+				ReplaceHeaderField("NTS", value);
+			}
+		}
+		
+		/// <summary>
+		/// Notification subject (NT heeader field)
+		/// </summary>
+		/// <value>The NT header field value.</value>
+		public string Subject
+		{
+			get
+			{
+				return TryGetHeaderFieldValue("NT", "");
+			}
+			set
+			{
+				ReplaceHeaderField("NT", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique ID of the device or service (USN header field)
+		/// </summary>
+		/// <value>The USN header field value.</value>
+		public string USN
+		{
+			get
+			{
+				return TryGetHeaderFieldValue("USN", "");
+			}
+			set
+			{
+				ReplaceHeaderField("USN", value);
+			}
+		}
+		
+		/// <summary>
+		/// A key usable to store Notification in a hash table
+		/// </summary>
+		/// <value>The key.</value>
+		public string Key
+		{
+			get
+			{
+				return Type + ";" + USN;
+			}
+		}
+		
+		/// <summary>
+		/// Notification expiration delay (The max-age parameter value of the Cache-Control header field).
+		/// </summary>
+		/// Expressed in seconds. Default value is 30.
+		/// <value>The max-age parameter value of the Cache-Control header field.</value>
+		public TimeSpan MaxAge
+		{
+			get
+			{
+				string text = TryGetHeaderFieldValue("Cache-Control", "");
+				
+				if (text.Length > 0)
+				{
+					var cc = CacheControlHeaderValue.Parse(text);
+					
+					if (cc.MaxAge != null)
+					{
+						return (TimeSpan)cc.MaxAge;
+					}
+				}
+				
+				return new TimeSpan(0, 0, 30);
+			}
+			set
+			{
+				CacheControlHeaderValue cc = null;
+				string text = TryGetHeaderFieldValue("Cache-Control", "");
+				
+				if (text.Length > 0)
+				{
+					cc = CacheControlHeaderValue.Parse(text);
+				}
+				else
+				{
+					cc = new CacheControlHeaderValue();
+				}
+				
+				ReplaceHeaderField("Cache-Control", cc.ToString());
+			}
+		}
+		
+		/// <summary>
+		/// NOTIFY SSDP request message
+		/// </summary>
+		/// <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:NoeeSources.SSDP.Notification"/>.</returns>
+		public override string ToString()
+		{
+			string s = "NOTIFY * HTTP/1.1\r\n";
+			
+			if (!Headers.Contains("NTS"))
+			{
+				s += "NTS: " + NotificationType.Alive + "\r\n";
+			}
+			
+			return s + base.ToString();
+		}
+	}
+}
