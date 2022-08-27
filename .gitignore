@@ -1,0 +1,7 @@
+# Derived data
+obj
+bin
+
+# Visual Studio
+\.vs
+
