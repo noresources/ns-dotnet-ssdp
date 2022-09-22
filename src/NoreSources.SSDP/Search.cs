@@ -18,7 +18,7 @@ namespace NoreSources.SSDP
 		/// <summary>
 		/// Special search subject to query all available devices and services.
 		/// </summary>
-		public static readonly string SearchAll = "ssdp:all";
+		public const string SearchAll = "ssdp:all";
 		
 		/// <summary>
 		/// Device or service type to search
