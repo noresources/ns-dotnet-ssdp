@@ -60,18 +60,18 @@ namespace NoreSources.SSDP
 		/// <summary>
 		/// Process message immediately instead of processing them in the Update() method
 		/// </summary>
-		public readonly static int  ImmediateMessageProcessing = (1 << 0);
+		public const int  ImmediateMessageProcessing = (1 << 0);
 		
 		/// <summary>
 		/// Also emit OnNotification events for notification
 		/// sent with the Notify() method
 		/// </summary>
-		public readonly static int  NotifyLoopback = (1 << 1);
+		public const int  NotifyLoopback = (1 << 1);
 		/// <summary>
 		/// Emit OnNotification events for all received notification messages
 		/// even for already known ones.
 		/// </summary>
-		public readonly static int  NotifyAll = (1 << 2);
+		public const int  NotifyAll = (1 << 2);
 	}
 	
 	/// <summary>
@@ -802,7 +802,7 @@ namespace NoreSources.SSDP
 		
 		private struct StateFlags
 		{
-			public readonly static int  Started = (1 << 32);
+			public const int  Started = (1 << 32);
 		}
 		
 		private int flags;

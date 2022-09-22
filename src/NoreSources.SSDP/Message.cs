@@ -14,8 +14,8 @@ namespace NoreSources.SSDP
 	/// </summary>
 	public class NotificationType
 	{
-		public static readonly string Alive = "ssdp:alive";
-		public static readonly string Dead = "ssdp:byebye";
+		public const string Alive = "ssdp:alive";
+		public const string Dead = "ssdp:byebye";
 	}
 	
 	/// <summary>

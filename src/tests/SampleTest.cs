@@ -49,7 +49,7 @@ namespace NoreSources.SSDP.Tests
 			protocol = new Protocol();
 			protocol.Flags = flags;
 			
-			Console.WriteLine ("Protocol flags: " + protocol.Flags);
+			Console.WriteLine("Protocol flags: " + protocol.Flags);
 			
 			protocol.OnNotification += (Notification n, NotificationEventReason r) =>
 			{
