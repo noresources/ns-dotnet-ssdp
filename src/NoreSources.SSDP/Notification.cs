@@ -4,6 +4,7 @@
  */
 
 using System;
+using System.Net;
 using System.Net.Http.Headers;
 
 namespace NoreSources.SSDP
@@ -102,6 +103,18 @@ namespace NoreSources.SSDP
 			}
 		}
 		
+		public IPAddress Address
+		{
+			get
+			{
+				return emitterAddress;
+			}
+			set
+			{
+				emitterAddress = value;
+			}
+		}
+		
 		/// <summary>
 		/// NOTIFY SSDP request message
 		/// </summary>
@@ -117,5 +130,12 @@ namespace NoreSources.SSDP
 			
 			return s + base.ToString();
 		}
+		
+		public Notification() : base()
+		{
+			emitterAddress = IPAddress.None;
+		}
+		
+		private IPAddress emitterAddress;
 	}
 }
