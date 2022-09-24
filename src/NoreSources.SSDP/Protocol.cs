@@ -750,6 +750,16 @@ namespace NoreSources.SSDP
 					}
 				}
 				
+				if (message is Notification)
+				{
+					Notification n = (message as Notification);
+					
+					if (endPoint is IPEndPoint)
+					{
+						n.Address = (endPoint as IPEndPoint).Address;
+					}
+				}
+				
 				if ((flags & (int)ProtocolOptions.ImmediateMessageProcessing) == ProtocolOptions.ImmediateMessageProcessing)
 				{
 					ProcessMessage(message);
