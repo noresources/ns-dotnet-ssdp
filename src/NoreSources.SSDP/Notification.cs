@@ -62,18 +62,6 @@ namespace NoreSources.SSDP
 		}
 		
 		/// <summary>
-		/// A key usable to store Notification in a hash table
-		/// </summary>
-		/// <value>The key.</value>
-		public string Key
-		{
-			get
-			{
-				return Type + ";" + USN;
-			}
-		}
-		
-		/// <summary>
 		/// Notification expiration delay (The max-age parameter value of the Cache-Control header field).
 		/// </summary>
 		/// Expressed in seconds. Default value is 30.

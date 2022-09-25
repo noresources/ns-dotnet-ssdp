@@ -421,7 +421,7 @@ namespace NoreSources.SSDP
 			}
 			
 			byte[] bytes = null;
-			string key = n.Key;
+			string key = n.USN;
 			
 			if (applicationNotifications.ContainsKey(key))
 			{
@@ -588,7 +588,7 @@ namespace NoreSources.SSDP
 			if (message is Notification)
 			{
 				Notification n = (message as Notification);
-				string key = n.Key;
+				string key = n.USN;
 				bool exists = activeNotifications.ContainsKey(key);
 				bool isLoopback = applicationNotifications.ContainsKey(key);
 				bool notifyLoopback = ((flags & ProtocolOptions.NotifyLoopback) == ProtocolOptions.NotifyLoopback);
@@ -691,7 +691,7 @@ namespace NoreSources.SSDP
 			{
 				SearchResponse sr = (message as SearchResponse);
 				Notification n = CreateNotification(sr);
-				string key = n.Key;
+				string key = n.USN;
 				bool exists = activeNotifications.ContainsKey(key);
 				
 				if (!exists)
