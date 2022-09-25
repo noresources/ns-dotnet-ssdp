@@ -567,18 +567,18 @@ namespace NoreSources.SSDP
 				if (delta.TotalSeconds < -expirationLeaway)
 				{
 					deads.Add(e.Key);
-					e.Value.notification.Type = NotificationType.Dead;
-					
-					if (OnNotification != null)
-					{
-						OnNotification(e.Value.notification, NotificationEventReason.Expired);
-					}
 				}
 			}
 			
-			foreach (var key in deads)
+			foreach (string key in deads)
 			{
-				/* @todo Event */
+				if (OnNotification != null)
+				{
+					ProtocolNotification pn = activeNotifications[key];
+					pn.notification.Type = NotificationType.Dead;
+					OnNotification(pn.notification, NotificationEventReason.Expired);
+				}
+				
 				activeNotifications.Remove(key);
 			}
 		}
