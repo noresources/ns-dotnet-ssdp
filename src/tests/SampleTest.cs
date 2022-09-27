@@ -61,7 +61,7 @@ namespace NoreSources.SSDP.Tests
 			
 			Notification me = protocol.CreateNotification();
 			me.Subject = "urn:schemas-nore-fr:service:http:1";
-			me.USN = "uuid:600dcafe-34f9-4385-ab50-47d0f5ffb20b::" + me.Subject;
+			me.USN = "uuid:" + Guid.NewGuid().ToString() + "::" + me.Subject;
 			me.MaxAge = new TimeSpan(0, 0,  60);
 			
 			me.Headers.Add("User-defined", "Huh ?i");
