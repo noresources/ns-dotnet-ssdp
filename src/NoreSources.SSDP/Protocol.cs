@@ -460,7 +460,7 @@ namespace NoreSources.SSDP
 			                             SocketType.Dgram,
 			                             ProtocolType.Udp);
 			multicastSocket.SetSocketOption(
-			    SocketOptionLevel.IP,
+			    SocketOptionLevel.Socket,
 			    SocketOptionName.ReuseAddress,
 			    true);
 			multicastSocket.Bind(localEndPoint);
