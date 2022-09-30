@@ -79,6 +79,8 @@ namespace NoreSources.SSDP
 	/// </summary>
 	public class Protocol
 	{
+		public const int MaxMessageLength = 2048;
+		
 		/// <summary>
 		/// Emit notification event for new, updated and removed devices or services.
 		/// </summary>
@@ -370,8 +372,12 @@ namespace NoreSources.SSDP
 				int publicFlags = (ProtocolOptions.ImmediateMessageProcessing
 				                   | ProtocolOptions.NotifyLoopback
 				                   | ProtocolOptions.NotifyAll);
-				flags &= ~publicFlags;
-				flags |= (value & publicFlags);
+				                   
+				lock (this)
+				{
+					flags &= ~publicFlags;
+					flags |= (value & publicFlags);
+				}
 			}
 		}
 		
@@ -388,20 +394,15 @@ namespace NoreSources.SSDP
 			expirationLeaway = 5;
 			multicastEndPoint = new IPEndPoint(IPAddress.Parse(address), port);
 			localEndPoint = new IPEndPoint(IPAddress.Any, multicastEndPoint.Port);
-			remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
 			
 			var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 			System.Diagnostics.FileVersionInfo assemblyVersionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
-			
 			signatureHeaderValue =
 			    Regex.Replace(Environment.OSVersion.ToString(), @"\s+(?=[0-9.]+$)", "/")
 			    + " SSDP/1.0.3"
 			    + " NoreSources.SSDP/" + assemblyVersionInfo.FileVersion;
 			    
-			multicastOption = new MulticastOption(multicastEndPoint.Address, localEndPoint.Address);
-			messageBuffer = new byte[2048];
-			messageReceptionCallback = new AsyncCallback(
-			    MessageReceptionCallback);
+			unicastMessageBuffer = new byte[MaxMessageLength];
 			    
 			messages = new Queue<Message>();
 			applicationNotifications = new Dictionary<string, ProtocolNotification>();
@@ -409,6 +410,23 @@ namespace NoreSources.SSDP
 			
 			pendingNotifications = new Queue<PendingNotification>();
 			pendingSearches = new Queue<SearchRequest>();
+		}
+		
+		~Protocol()
+		{
+			Stop();
+			
+			if (clientContext != null)
+			{
+				clientContext.socket = null;
+				clientContext = null;
+			}
+			
+			if (multicastContext != null)
+			{
+				multicastContext.socket = null;
+				multicastContext = null;
+			}
 		}
 		
 		/// <summary>
@@ -487,7 +505,7 @@ namespace NoreSources.SSDP
 				bytes = System.Text.Encoding.ASCII.GetBytes(n.ToString());
 			}
 			
-			multicastSocket.BeginSendTo(
+			clientContext.socket.BeginSendTo(
 			    bytes, 0, bytes.Length, 0,
 			    multicastEndPoint,
 			    new AsyncCallback(MessageSendingCallback),
@@ -504,26 +522,45 @@ namespace NoreSources.SSDP
 				return;
 			}
 			
-			multicastSocket = new Socket(AddressFamily.InterNetwork,
-			                             SocketType.Dgram,
-			                             ProtocolType.Udp);
-			multicastSocket.SetSocketOption(
+			
+			clientContext = new SocketContext(this);
+			clientContext.callback = new AsyncCallback(MessageReceptionCallback);
+			clientContext.socket = new Socket(AddressFamily.InterNetwork,
+			                                  SocketType.Dgram,
+			                                  ProtocolType.Udp);
+			                                  
+			multicastContext = new SocketContext(this);
+			multicastContext.callback = new AsyncCallback(MessageReceptionCallback);
+			multicastContext.socket = new Socket(AddressFamily.InterNetwork,
+			                                     SocketType.Dgram,
+			                                     ProtocolType.Udp);
+			multicastContext.socket.SetSocketOption(
 			    SocketOptionLevel.Socket,
 			    SocketOptionName.ReuseAddress,
 			    true);
-			multicastSocket.Bind(localEndPoint);
-			multicastSocket.SetSocketOption(SocketOptionLevel.IP,
-			                                SocketOptionName.AddMembership,
-			                                multicastOption);
-			                                
-			EndPoint endPoint = (EndPoint)remoteEndPoint;
-			multicastSocket.BeginReceiveFrom(
-			    messageBuffer, 0, messageBuffer.Length, 0,
-			    ref endPoint,
-			    messageReceptionCallback, this
-			);
+			multicastContext.socket.SetSocketOption(
+			    SocketOptionLevel.IP,
+			    SocketOptionName.IpTimeToLive,
+			    1);
+			    
+			multicastContext.socket.Bind(localEndPoint);
 			
+			MulticastOption multicastOption = new MulticastOption(multicastEndPoint.Address, localEndPoint.Address);
+			multicastContext.socket.SetSocketOption(SocketOptionLevel.IP,
+			                                        SocketOptionName.AddMembership,
+			                                        multicastOption);
+			multicastContext.socket.SetSocketOption(
+			    SocketOptionLevel.IP,
+			    SocketOptionName.MulticastTimeToLive,
+			    1);
+			    
 			flags |= (int)StateFlags.Started;
+			
+			multicastContext.remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
+			StartSocketReception(multicastContext);
+			
+			clientContext.remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
+			StartSocketReception(clientContext);
 			
 			foreach (var p in pendingNotifications)
 			{
@@ -543,7 +580,8 @@ namespace NoreSources.SSDP
 		/// <summary>
 		/// Stop listening and emitting SSDP messages.
 		/// </summary>
-		public async void Stop()
+		/// <param name = "keepPersistentNotifications">If true, persistent notifications will be kept and re - published when protocol is started again < / param >
+		public void Stop(bool keepPersistentNotifications = true)
 		{
 			if ((flags & (int)StateFlags.Started) == 0)
 			{
@@ -552,22 +590,30 @@ namespace NoreSources.SSDP
 			
 			foreach (var e in applicationNotifications)
 			{
+				if (keepPersistentNotifications)
+				{
+					PendingNotification pn = new PendingNotification();
+					pn.notification = e.Value.notification.Clone() as Notification;
+					pn.persist = true;
+					pendingNotifications.Enqueue(pn);
+				}
+				
 				e.Value.notification.Type = NotificationType.Dead;
 				e.Value.Build();
 				
-				await Task.Factory.FromAsync(
-				    multicastSocket.BeginSendTo(
-				        e.Value.messageData, 0, e.Value.messageData.Length, 0,
-				        multicastEndPoint,
-				        new AsyncCallback(MessageSendingCallback),
-				        this), null);
-				        
+				
+				clientContext.socket.SendTo(
+				    e.Value.messageData, 0, e.Value.messageData.Length, 0,
+				    multicastEndPoint);
 			}
 			
-			multicastSocket.Close();
-			multicastSocket = null;
+			lock (this)
+			{
+				flags &= ~(int)StateFlags.Started;
+			}
 			
-			flags &= ~(int)StateFlags.Started;
+			clientContext.socket.Close();
+			multicastContext.socket.Close();
 		}
 		
 		/// <summary>
@@ -593,7 +639,7 @@ namespace NoreSources.SSDP
 				if (delta.TotalSeconds < expirationLeaway)
 				{
 					e.Value.Poke();
-					multicastSocket.BeginSendTo(
+					clientContext.socket.BeginSendTo(
 					    e.Value.messageData, 0, e.Value.messageData.Length, 0,
 					    multicastEndPoint,
 					    new AsyncCallback(MessageSendingCallback),
@@ -723,7 +769,7 @@ namespace NoreSources.SSDP
 				
 				foreach (var e in applicationNotifications)
 				{
-					Notification n =  e.Value.notification;
+					Notification n = e.Value.notification;
 					
 					if (subject == SearchRequest.SearchAll || n.Subject == subject)
 					{
@@ -761,43 +807,45 @@ namespace NoreSources.SSDP
 		{
 			try
 			{
-				multicastSocket.EndSendTo(ar);
+				clientContext.socket.EndSendTo(ar);
 			}
-			catch (Exception)
+			catch (ObjectDisposedException)
 			{
-				/**
-				* @todo What to do with failures
-				*/
+				// Socket closed
+				return;
 			}
+		}
+		
+		private void MessageReceptionCallback(IAsyncResult ar)
+		{
+			(ar.AsyncState as SocketContext).self.HandleMessageReception(ar);
 		}
 		
 		private void HandleMessageReception(IAsyncResult ar)
 		{
+			SocketContext context = (ar.AsyncState as SocketContext);
 			EndPoint endPoint = new IPEndPoint(IPAddress.Any, 0);
+			int length = 0;
 			
 			try
 			{
-				int bytesRead = multicastSocket.EndReceiveFrom(ar, ref endPoint);
-				
-				if (bytesRead <= 0)
+				length = multicastContext.socket.EndReceiveFrom(ar, ref endPoint);
+			}
+			catch (ObjectDisposedException)
 				{
+				// Socket closed
 					return;
 				}
 				
-				string text = Encoding.ASCII.GetString(messageBuffer, 0, bytesRead);
-				
-				Message message = ParseMessage(text);
-				
-				if (message is SearchRequest)
-				{
-					SearchRequest r = (message as SearchRequest);
-					
-					if (endPoint is IPEndPoint)
+			if (length <= 0)
 					{
-						r.EndPoint = (endPoint as IPEndPoint);
-					}
+				StartSocketReception(context);
+				return;
 				}
 				
+			string text = Encoding.ASCII.GetString(context.data, 0, length);
+			Message message = ParseMessage(text);
+			
 				if (message is Notification)
 				{
 					Notification n = (message as Notification);
@@ -807,40 +855,47 @@ namespace NoreSources.SSDP
 						n.Address = (endPoint as IPEndPoint).Address;
 					}
 				}
-				
-				if ((flags & (int)ProtocolOptions.ImmediateMessageProcessing) == ProtocolOptions.ImmediateMessageProcessing)
+			else if (message is SearchRequest)
 				{
-					ProcessMessage(message);
-				}
-				else
+				SearchRequest r = (message as SearchRequest);
+			
+				if (endPoint is IPEndPoint)
 				{
-					messages.Enqueue(message);
+					r.EndPoint = (endPoint as IPEndPoint);
+			}
+		}
+		
+					if ((flags & (int)ProtocolOptions.ImmediateMessageProcessing) == ProtocolOptions.ImmediateMessageProcessing)
+					{
+						ProcessMessage(message);
+					}
+					else
+					{
+						messages.Enqueue(message);
+					}
+			
+			StartSocketReception(context);
+			}
+			
+		void StartSocketReception(SocketContext context)
+		{
+			lock (this)
+			{
+				if ((flags & StateFlags.Started) == 0)
+				{
+					return;
 				}
-			}
-			catch (Exception)
-			{
-				/**
-				* @todo What to do with invalid headers
-				*/
-			}
-			finally
-			{
-				endPoint = (EndPoint)remoteEndPoint;
-				multicastSocket.BeginReceiveFrom(
-				    messageBuffer, 0, messageBuffer.Length, 0,
-				    ref endPoint,
-				    messageReceptionCallback, this);
+			
+				context.socket.BeginReceiveFrom(
+				    context.data, 0, context.data.Length, 0,
+				    ref context.remoteEndPoint,
+				    context.callback, context);
 			}
 		}
 		
 		private void MessageSendingCallback(IAsyncResult ar)
 		{
 			(ar.AsyncState as Protocol).HandleMessageSending(ar);
-		}
-		
-		private void MessageReceptionCallback(IAsyncResult ar)
-		{
-			(ar.AsyncState as Protocol).HandleMessageReception(ar);
 		}
 		
 		private IAsyncResult BeginSendMessage(Message message, EndPoint endPoint = null)
@@ -851,7 +906,7 @@ namespace NoreSources.SSDP
 			}
 			
 			byte [] bytes = System.Text.Encoding.ASCII.GetBytes(message.ToString());
-			return multicastSocket.BeginSendTo(
+			return clientContext.socket.BeginSendTo(
 			           bytes, 0, bytes.Length, 0,
 			           endPoint,
 			           new AsyncCallback(MessageSendingCallback),
@@ -864,23 +919,40 @@ namespace NoreSources.SSDP
 		}
 		
 		private int flags;
-		private IPEndPoint localEndPoint;
 		private string signatureHeaderValue;
+		int expirationLeaway;
 		
+		private IPEndPoint localEndPoint;
 		private IPEndPoint multicastEndPoint;
-		MulticastOption multicastOption;
-		private Socket multicastSocket;
-		private byte[] messageBuffer;
-		AsyncCallback messageReceptionCallback;
-		private IPEndPoint remoteEndPoint;
+		
+		private byte[] unicastMessageBuffer;
+		
+		SocketContext multicastContext;
+		SocketContext clientContext;
 		
 		private Queue<Message> messages;
 		private Dictionary<string, ProtocolNotification> applicationNotifications;
 		private Dictionary<string, ProtocolNotification> activeNotifications;
 		private Queue< PendingNotification > pendingNotifications;
 		private Queue<SearchRequest> pendingSearches;
-		int expirationLeaway;
+		
 	} // Protocol
+	
+	internal class SocketContext
+	{
+		public SocketContext(Protocol p)
+		{
+			self = p;
+			socket = null;
+			data = new byte[Protocol.MaxMessageLength];
+		}
+		
+		public Protocol self;
+		public Socket socket;
+		public byte[] data;
+		public AsyncCallback callback;
+		public EndPoint remoteEndPoint;
+	}
 	
 	struct PendingNotification
 	{

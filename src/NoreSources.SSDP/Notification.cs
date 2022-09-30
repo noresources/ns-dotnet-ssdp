@@ -12,7 +12,7 @@ namespace NoreSources.SSDP
 	/// <summary>
 	/// Notification message
 	/// </summary>
-	public class Notification : Message
+	public class Notification : Message, ICloneable
 	{
 		/// <summary>
 		/// Notification type (NTS header field)
@@ -129,6 +129,11 @@ namespace NoreSources.SSDP
 			}
 			
 			return s + base.ToString();
+		}
+		
+		public object Clone()
+		{
+			return this.MemberwiseClone();
 		}
 		
 		public Notification() : base()
