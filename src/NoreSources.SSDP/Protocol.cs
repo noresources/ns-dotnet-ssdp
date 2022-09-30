@@ -308,6 +308,54 @@ namespace NoreSources.SSDP
 		}
 		
 		/// <summary>
+		/// Createe a search response for the given notification.
+		/// All meaningful headers of the notification are
+		/// translated or compied as is to the new search response.
+		/// </summary>
+		/// <returns>The search response describing the given service or device notification.</returns>
+		/// <param name="n">Notification message.</param>
+		public SearchResponse CreateSearchResponse(Notification n)
+		{
+			SearchResponse r = new SearchResponse();
+			r.Subject = n.Subject;
+			r.USN = n.USN;
+			
+			r.Headers.Add("Ext", "");
+			
+			foreach (var h in n.Headers)
+			{
+				string key = h.Key.ToUpper();
+				
+				if (key == "NT" || key == "NTS")
+				{
+					continue;
+				}
+				
+				if (r.Headers.Contains(key))
+				{
+					continue;
+				}
+				
+				r.Headers.Add(h.Key, h.Value);
+			}
+			
+			if (!r.Headers.Contains("HOST"))
+			{
+				r.Headers.Add("HOST", HostHeaderValue);
+			}
+			
+			if (!r.Headers.Contains("CACHE-CONTROL"))
+			{
+				CacheControlHeaderValue cc = new CacheControlHeaderValue();
+				cc.MaxAge = new TimeSpan(0, 0, 30);
+				/// @todo Add no-cache="Ext"
+				r.Headers.Add("CACHE-CONTROL", cc.ToString());
+			}
+			
+			return r;
+		}
+		
+		/// <summary>
 		/// Protocol option and state flags
 		/// </summary>
 		/// <value>The protocol option and state flags.</value>
@@ -679,7 +727,7 @@ namespace NoreSources.SSDP
 					
 					if (subject == SearchRequest.SearchAll || n.Subject == subject)
 					{
-						SearchResponse r = CreateSearchResponse(n.Subject, n.USN);
+						SearchResponse r = CreateSearchResponse(n);
 						BeginSendMessage(r, sr.EndPoint);
 					}
 				}
