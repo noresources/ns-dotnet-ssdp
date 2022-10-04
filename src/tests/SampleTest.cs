@@ -4,6 +4,7 @@
  */
 
 using System;
+using System.Net;
 using System.Threading;
 
 using NoreSources.SSDP;
@@ -53,7 +54,8 @@ namespace NoreSources.SSDP.Tests
 			
 			protocol.OnNotification += (Notification n, NotificationEventReason r) =>
 			{
-				Console.WriteLine("Notification "
+				Console.WriteLine("Notification from "
+				                  + n.Address.ToString() + " "
 				                  + n.Type + " "
 				                  + r + " "
 				                  + n.USN);

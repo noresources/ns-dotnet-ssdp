@@ -9,6 +9,7 @@ project "SampleTest"
 	files { "../../src/tests/SampleTest.cs" }
 	links { 
 		"NoreSources.SSDP",
+		"System.dll",
 		"System.Net.Http.dll"
 	 }
 
