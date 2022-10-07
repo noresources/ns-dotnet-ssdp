@@ -58,6 +58,9 @@
     <Compile Include="..\..\src\NoreSources.SSDP\Search.cs">
       <Link>src\NoreSources.SSDP\Search.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\NoreSources.SSDP\Utility.cs">
+      <Link>src\NoreSources.SSDP\Utility.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

@@ -403,7 +403,7 @@ namespace NoreSources.SSDP
 			    + " NoreSources.SSDP/" + assemblyVersionInfo.FileVersion;
 			    
 			unicastMessageBuffer = new byte[MaxMessageLength];
-			    
+			
 			messages = new Queue<Message>();
 			applicationNotifications = new Dictionary<string, ProtocolNotification>();
 			activeNotifications = new Dictionary<string, ProtocolNotification>();
@@ -529,6 +529,8 @@ namespace NoreSources.SSDP
 			                                  SocketType.Dgram,
 			                                  ProtocolType.Udp);
 			                                  
+			clientContext.socket.Bind(new IPEndPoint(IPAddress.Any, 0));
+			
 			multicastContext = new SocketContext(this);
 			multicastContext.callback = new AsyncCallback(MessageReceptionCallback);
 			multicastContext.socket = new Socket(AddressFamily.InterNetwork,
@@ -542,9 +544,6 @@ namespace NoreSources.SSDP
 			    SocketOptionLevel.IP,
 			    SocketOptionName.IpTimeToLive,
 			    1);
-			    
-			multicastContext.socket.Bind(localEndPoint);
-			
 			MulticastOption multicastOption = new MulticastOption(multicastEndPoint.Address, localEndPoint.Address);
 			multicastContext.socket.SetSocketOption(SocketOptionLevel.IP,
 			                                        SocketOptionName.AddMembership,
@@ -554,6 +553,8 @@ namespace NoreSources.SSDP
 			    SocketOptionName.MulticastTimeToLive,
 			    1);
 			    
+			multicastContext.socket.Bind(localEndPoint);
+			
 			flags |= (int)StateFlags.Started;
 			
 			multicastContext.remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
@@ -832,51 +833,51 @@ namespace NoreSources.SSDP
 				length = multicastContext.socket.EndReceiveFrom(ar, ref endPoint);
 			}
 			catch (ObjectDisposedException)
-				{
+			{
 				// Socket closed
-					return;
-				}
-				
+				return;
+			}
+			
 			if (length <= 0)
-					{
+			{
 				StartSocketReception(context);
 				return;
-				}
-				
+			}
+			
 			string text = Encoding.ASCII.GetString(context.data, 0, length);
 			Message message = ParseMessage(text);
 			
-				if (message is Notification)
+			if (message is Notification)
+			{
+				Notification n = (message as Notification);
+				
+				if (endPoint is IPEndPoint)
 				{
-					Notification n = (message as Notification);
-					
-					if (endPoint is IPEndPoint)
-					{
-						n.Address = (endPoint as IPEndPoint).Address;
-					}
+					n.Address = (endPoint as IPEndPoint).Address;
 				}
+			}
 			else if (message is SearchRequest)
-				{
+			{
 				SearchRequest r = (message as SearchRequest);
-			
+				
 				if (endPoint is IPEndPoint)
 				{
 					r.EndPoint = (endPoint as IPEndPoint);
+				}
 			}
-		}
-		
-					if ((flags & (int)ProtocolOptions.ImmediateMessageProcessing) == ProtocolOptions.ImmediateMessageProcessing)
-					{
-						ProcessMessage(message);
-					}
-					else
-					{
-						messages.Enqueue(message);
-					}
+			
+			if ((flags & (int)ProtocolOptions.ImmediateMessageProcessing) == ProtocolOptions.ImmediateMessageProcessing)
+			{
+				ProcessMessage(message);
+			}
+			else
+			{
+				messages.Enqueue(message);
+			}
 			
 			StartSocketReception(context);
-			}
-			
+		}
+		
 		void StartSocketReception(SocketContext context)
 		{
 			lock (this)
@@ -885,7 +886,7 @@ namespace NoreSources.SSDP
 				{
 					return;
 				}
-			
+				
 				context.socket.BeginReceiveFrom(
 				    context.data, 0, context.data.Length, 0,
 				    ref context.remoteEndPoint,

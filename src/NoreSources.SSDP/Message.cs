@@ -4,6 +4,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Net.Http.Headers;
 
@@ -60,14 +61,21 @@ namespace NoreSources.SSDP
 			headers.Add(name, value);
 		}
 		
-		protected string TryGetHeaderFieldValue(string name, string fallback)
+		protected string TryGetHeaderFieldValue(string name, string fallback = null)
 		{
 			if (!Headers.Contains(name))
 			{
 				return fallback;
 			}
 			
-			return ((string[])headers.GetValues(name))[0];
+			var values = headers.GetValues(name);
+			
+			if (!(values is IEnumerable<string>))
+			{
+				return fallback;
+			}
+			
+			return Utility.First(values, fallback);
 		}
 		
 		protected string TryGetHeaderFieldValue(string name, string glue, string fallback)
@@ -77,17 +85,17 @@ namespace NoreSources.SSDP
 				return fallback;
 			}
 			
-			return String.Join(glue, ((string[])headers.GetValues(name)));
+			return String.Join(glue, headers.GetValues(name));
 		}
 		
 		protected string GetHeaderFieldValue(string name)
 		{
-			return ((string[])headers.GetValues(name))[0];
+			return Utility.First(headers.GetValues(name), null);
 		}
 		
 		protected string GetHeaderFieldValue(string name, string glue)
 		{
-			return String.Join(glue, ((string[])headers.GetValues(name)));
+			return String.Join(glue, headers.GetValues(name));
 		}
 		
 		private HttpHeaders headers;
