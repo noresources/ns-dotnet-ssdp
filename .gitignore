@@ -1,6 +1,9 @@
 # Derived data
 obj
-bin
+/bin
+/tests
+/lib
+
 
 # Visual Studio
 \.vs

@@ -9,7 +9,7 @@ using System.Threading;
 
 using NoreSources.SSDP;
 
-namespace NoreSources.SSDP.Tests
+namespace NoreSources.SSDP.Examples
 {
 	public class SampleTest
 	{

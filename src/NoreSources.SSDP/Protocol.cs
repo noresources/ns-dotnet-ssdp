@@ -96,7 +96,7 @@ namespace NoreSources.SSDP
 		/// </summary>
 		/// <returns>A Message derived class.</returns>
 		/// <param name="text">SSDP message text.</param>
-		public static Message ParseMessage(string text)
+		public Message ParseMessage(string text)
 		{
 			var lines = text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
 
@@ -105,22 +105,18 @@ namespace NoreSources.SSDP
 				throw new Exception("Invalid message");
 			}
 
-			string firstLine = lines[0];
+			string startLine = lines[0] + "\r\n";
 			Message message = null;
-			Match match = null;
-			Regex requestRegex = new Regex(
-				@"^([a-z_-]+)\s+\*\s+HTTP/[0-9]+\.[0-9]+$",
-				RegexOptions.IgnoreCase);
 
-			Regex responseRegex = new Regex(
-				@"^HTTP/[0-9]+\.[0-9]+\s200\s+",
-				RegexOptions.IgnoreCase);
+			HTTP.Messages.RequestLine requestLine = new HTTP.Messages.RequestLine();
+			HTTP.Messages.StatusLine statusLine = null;
+			var httpType = messageParser.ParseStartLine(requestLine, statusLine, startLine);
 
-			if ((match = requestRegex.Match(firstLine)).Success)
+			if (httpType == HTTP.Messages.MessageType.Request)
 			{
-				string method = match.Groups[1].ToString();
+				string method = requestLine.Method.ToString().ToUpper();
 
-				if (method.ToUpper() == "NOTIFY")
+				if (method == "NOTIFY")
 				{
 					message = new Notification();
 				}
@@ -129,70 +125,17 @@ namespace NoreSources.SSDP
 					message = new SearchRequest();
 				}
 			}
-			else if ((match = responseRegex.Match(firstLine)).Success)
+			else if (httpType == HTTP.Messages.MessageType.Response)
 			{
 				message = new SearchResponse();
 			}
 
 			if (message == null)
 			{
-				throw new Exception("Unsupported message type " + firstLine);
+				throw new Exception("Unsupported message type " + startLine);
 			}
 
-			string name = "";
-			string value = "";
-
-			for (int i = 1; i < lines.Length; ++i)
-			{
-				string line = lines[i];
-
-				if (line.Length == 0)
-				{
-					break;
-				}
-
-				if (line[0] == ' ' || line[0] == '\t')
-				{
-					if (name.Length == 0)
-					{
-						throw new Exception("Invalid line " + line);
-					}
-
-					value += line;
-					continue;
-				}
-
-				if (name.Length > 0)
-				{
-					try
-					{
-						if (value.Length > 0)
-						{
-							message.Headers.Add(name, value);
-						}
-					}
-					catch (Exception) { /* Ignore invalid headers */ }
-
-					name = "";
-					value = "";
-				}
-
-				int colon = line.IndexOf(':');
-
-				if (colon <= 0)
-				{
-					throw new Exception("Invalid header field line " + line);
-				}
-
-				name = line.Substring(0, colon);
-				value = line.Substring(colon + 1).TrimStart();
-			}
-
-			if (name.Length > 0)
-			{
-				message.Headers.Add(name, value);
-			}
-
+			messageParser.ParseHeaders(message.Headers, lines, 1);
 			return message;
 		}
 
@@ -421,6 +364,7 @@ namespace NoreSources.SSDP
 
 			unicastMessageBuffer = new byte[MaxMessageLength];
 
+			messageParser = new HTTP.Messages.Parser();
 			messages = new Queue<Message>();
 			applicationNotifications = new Dictionary<string, ProtocolNotification>();
 			activeNotifications = new Dictionary<string, ProtocolNotification>();
@@ -969,6 +913,8 @@ namespace NoreSources.SSDP
 		SocketContext multicastContext;
 		SocketContext clientContext;
 
+		private HTTP.Messages.Parser messageParser;
+		
 		private Queue<Message> messages;
 		private Dictionary<string, ProtocolNotification> applicationNotifications;
 		private Dictionary<string, ProtocolNotification> activeNotifications;
