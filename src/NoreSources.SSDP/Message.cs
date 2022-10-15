@@ -46,9 +46,7 @@ namespace NoreSources.SSDP
 		/// <returns>RFC 2616 representation of HTTP header fields</returns>
 		public override string ToString()
 		{
-			string text = "";
-			text += headers.ToString();
-			return text + "\r\n";
+			return headers.ToString() + "\r\n";
 		}
 		
 		protected void ReplaceHeaderField(string name, string value)
