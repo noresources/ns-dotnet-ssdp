@@ -10,4 +10,4 @@ workspace "ns-dotnet-ssdp"
 	targetdir ("../../bin")
 	
 	include "./NoreSources.SSDP.lua"
-	include "./NoreSources.SSDP.Tests.lua"
+	include "./NoreSources.SSDP.Examples.lua"

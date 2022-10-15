@@ -18,7 +18,7 @@
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\</OutputPath>
+    <OutputPath>..\..\lib\</OutputPath>
     <BaseIntermediateOutputPath>obj\Debug\NoreSources.SSDP\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
@@ -30,7 +30,7 @@
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\</OutputPath>
+    <OutputPath>..\..\lib\</OutputPath>
     <BaseIntermediateOutputPath>obj\Release\NoreSources.SSDP\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
@@ -46,6 +46,9 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\src\NoreSources.HTTP\Messages.cs">
+      <Link>src\NoreSources.HTTP\Messages.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\NoreSources.SSDP\Message.cs">
       <Link>src\NoreSources.SSDP\Message.cs</Link>
     </Compile>

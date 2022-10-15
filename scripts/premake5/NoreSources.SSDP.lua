@@ -5,10 +5,12 @@
 
 project "NoreSources.SSDP"
 	kind "SharedLib"
+	targetdir "../../lib"
 	language "C#"
 	dotnetframework "4.7"
 	files {
-		"../../src/%{prj.name}/**.cs"
+		"../../src/NoreSources.SSDP/**.cs",
+		"../../src/NoreSources.HTTP/**cs"
 	}
 	links { 
 		"System.dll" ,
