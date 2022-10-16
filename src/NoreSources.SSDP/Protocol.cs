@@ -60,18 +60,18 @@ namespace NoreSources.SSDP
 		/// <summary>
 		/// Process message immediately instead of processing them in the Update() method
 		/// </summary>
-		public const int  ImmediateMessageProcessing = (1 << 0);
+		public const uint  ImmediateMessageProcessing = (1 << 0);
 		
 		/// <summary>
 		/// Also emit OnNotification events for notification
 		/// sent with the Notify() method
 		/// </summary>
-		public const int  NotifyLoopback = (1 << 1);
+		public const uint  NotifyLoopback = (1 << 1);
 		/// <summary>
 		/// Emit OnNotification events for all received notification messages
 		/// even for already known ones.
 		/// </summary>
-		public const int  NotifyAll = (1 << 2);
+		public const uint  NotifyAll = (1 << 2);
 	}
 	
 	/// <summary>
@@ -358,10 +358,22 @@ namespace NoreSources.SSDP
 		}
 		
 		/// <summary>
+		/// Indicates if the protocol is started.
+		/// </summary>
+		/// <value><c>true</c> if started; otherwise, <c>false</c>.</value>
+		public bool Started
+		{
+			get
+			{
+				return ((flags & StateFlags.Started) == StateFlags.Started);
+			}
+		}
+		
+		/// <summary>
 		/// Protocol option and state flags
 		/// </summary>
 		/// <value>The protocol option and state flags.</value>
-		public int Flags
+		public uint Flags
 		{
 			get
 			{
@@ -369,10 +381,10 @@ namespace NoreSources.SSDP
 			}
 			set
 			{
-				int publicFlags = (ProtocolOptions.ImmediateMessageProcessing
-				                   | ProtocolOptions.NotifyLoopback
-				                   | ProtocolOptions.NotifyAll);
-				                   
+				uint publicFlags = (ProtocolOptions.ImmediateMessageProcessing
+				                    | ProtocolOptions.NotifyLoopback
+				                    | ProtocolOptions.NotifyAll);
+				                    
 				lock (this)
 				{
 					flags &= ~publicFlags;
@@ -461,7 +473,7 @@ namespace NoreSources.SSDP
 				}
 			}
 			
-			if ((flags & (int)StateFlags.Started) == 0)
+			if ((flags & StateFlags.Started) == 0)
 			{
 				pendingSearches.Enqueue(sr);
 				return;
@@ -477,7 +489,7 @@ namespace NoreSources.SSDP
 		/// <param name="persist">If set to <c>true</c>, the notification will be automatically renewed if needed when the Updat() method is invoked.</param>
 		public void Notify(Notification n, bool persist = false)
 		{
-			if ((flags & (int)StateFlags.Started) == 0)
+			if ((flags & StateFlags.Started) == 0)
 			{
 				var p = new PendingNotification();
 				p.notification = n;
@@ -517,7 +529,7 @@ namespace NoreSources.SSDP
 		/// </summary>
 		public void Start()
 		{
-			if ((flags & (int)StateFlags.Started) != 0)
+			if ((flags & StateFlags.Started) != 0)
 			{
 				return;
 			}
@@ -555,7 +567,7 @@ namespace NoreSources.SSDP
 			    
 			multicastContext.socket.Bind(localEndPoint);
 			
-			flags |= (int)StateFlags.Started;
+			flags |= StateFlags.Started;
 			
 			multicastContext.remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
 			StartSocketReception(multicastContext);
@@ -584,7 +596,7 @@ namespace NoreSources.SSDP
 		/// <param name = "keepPersistentNotifications">If true, persistent notifications will be kept and re - published when protocol is started again < / param >
 		public void Stop(bool keepPersistentNotifications = true)
 		{
-			if ((flags & (int)StateFlags.Started) == 0)
+			if ((flags & StateFlags.Started) == 0)
 			{
 				return;
 			}
@@ -610,7 +622,7 @@ namespace NoreSources.SSDP
 			
 			lock (this)
 			{
-				flags &= ~(int)StateFlags.Started;
+				flags &= ~StateFlags.Started;
 			}
 			
 			clientContext.socket.Close();
@@ -622,9 +634,10 @@ namespace NoreSources.SSDP
 		/// </summary>
 		public void Update()
 		{
-			if ((flags & (int)ProtocolOptions.ImmediateMessageProcessing) == 0)
+			if ((flags & ProtocolOptions.ImmediateMessageProcessing) == 0)
 			{
 				List<Message> messageList = null;
+				
 				lock (messages)
 				{
 					if (messages.Count > 0)
@@ -883,7 +896,7 @@ namespace NoreSources.SSDP
 				}
 			}
 			
-			if ((flags & (int)ProtocolOptions.ImmediateMessageProcessing) == ProtocolOptions.ImmediateMessageProcessing)
+			if ((flags & ProtocolOptions.ImmediateMessageProcessing) == ProtocolOptions.ImmediateMessageProcessing)
 			{
 				ProcessMessage(message);
 			}
@@ -936,10 +949,10 @@ namespace NoreSources.SSDP
 		
 		private struct StateFlags
 		{
-			public const int  Started = (1 << 32);
+			public const uint  Started = (1 << 32);
 		}
 		
-		private int flags;
+		private uint flags;
 		private string signatureHeaderValue;
 		int expirationLeaway;
 		

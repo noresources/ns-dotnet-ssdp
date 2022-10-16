@@ -27,7 +27,7 @@ namespace NoreSources.SSDP.Tests
 		
 		public static void Main(String[] args)
 		{
-			int flags = 0;
+			uint flags = 0;
 			
 			foreach (var a in args)
 			{
