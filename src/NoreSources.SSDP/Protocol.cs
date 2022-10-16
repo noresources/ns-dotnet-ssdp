@@ -622,12 +622,29 @@ namespace NoreSources.SSDP
 		/// </summary>
 		public void Update()
 		{
-			Message m;
-			
-			while (messages.Count > 0)
+			if ((flags & (int)ProtocolOptions.ImmediateMessageProcessing) == 0)
 			{
-				m = messages.Dequeue();
-				ProcessMessage(m);
+				List<Message> messageList = null;
+				lock (messages)
+				{
+					if (messages.Count > 0)
+					{
+						messageList = new List<Message>();
+						
+						while (messages.Count > 0)
+						{
+							messageList.Add(messages.Dequeue());
+						}
+					}
+				}
+				
+				if (messageList != null)
+				{
+					foreach (var m in messageList)
+					{
+						ProcessMessage(m);
+					}
+				}
 			}
 			
 			DateTime now = DateTime.Now;
@@ -872,7 +889,10 @@ namespace NoreSources.SSDP
 			}
 			else
 			{
-				messages.Enqueue(message);
+				lock (messages)
+				{
+					messages.Enqueue(message);
+				}
 			}
 			
 			StartSocketReception(context);
