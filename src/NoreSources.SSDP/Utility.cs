@@ -13,12 +13,12 @@ namespace NoreSources.SSDP
 		public static T First<T>(in IEnumerable<T> container, T fallback)
 		{
 			var e = container.GetEnumerator();
-			
+
 			if (!e.MoveNext())
 			{
 				return fallback;
 			}
-			
+
 			return e.Current;
 		}
 	}

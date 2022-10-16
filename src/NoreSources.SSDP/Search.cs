@@ -19,7 +19,7 @@ namespace NoreSources.SSDP
 		/// Special search subject to query all available devices and services.
 		/// </summary>
 		public const string SearchAll = "ssdp:all";
-		
+
 		/// <summary>
 		/// Device or service type to search
 		/// </summary>
@@ -35,7 +35,7 @@ namespace NoreSources.SSDP
 				ReplaceHeaderField("ST", value);
 			}
 		}
-		
+
 		/// <summary>
 		/// The IP address and port from which the request was issued
 		/// </summary>
@@ -51,12 +51,12 @@ namespace NoreSources.SSDP
 				endPoint = value;
 			}
 		}
-		
+
 		public SearchRequest() : base()
 		{
 			endPoint = null;
 		}
-		
+
 		/// <summary>
 		/// M-SEARCH SSDP request message
 		/// </summary>
@@ -65,10 +65,10 @@ namespace NoreSources.SSDP
 		{
 			return "M-SEARCH * HTTP/1.1\r\n" + base.ToString();
 		}
-		
+
 		private IPEndPoint endPoint;
 	}
-	
+
 	/// <summary>
 	/// Response to a search request
 	/// </summary>
@@ -89,7 +89,7 @@ namespace NoreSources.SSDP
 				ReplaceHeaderField("ST", value);
 			}
 		}
-		
+
 		/// <summary>
 		/// The unique ID the device or service.
 		/// </summary>
@@ -105,7 +105,7 @@ namespace NoreSources.SSDP
 				ReplaceHeaderField("USN", value);
 			}
 		}
-		
+
 		/// <summary>
 		/// Expiration delay of the notification
 		/// </summary>
@@ -115,24 +115,24 @@ namespace NoreSources.SSDP
 			get
 			{
 				string text = TryGetHeaderFieldValue("Cache-Control", "");
-				
+
 				if (text.Length > 0)
 				{
 					var cc = CacheControlHeaderValue.Parse(text);
-					
+
 					if (cc.MaxAge != null)
 					{
 						return (TimeSpan)cc.MaxAge;
 					}
 				}
-				
+
 				return new TimeSpan(0, 0, 30);
 			}
 			set
 			{
 				CacheControlHeaderValue cc = null;
 				string text = TryGetHeaderFieldValue("Cache-Control", "");
-				
+
 				if (text.Length > 0)
 				{
 					cc = CacheControlHeaderValue.Parse(text);
@@ -141,15 +141,15 @@ namespace NoreSources.SSDP
 				{
 					cc = new CacheControlHeaderValue();
 				}
-				
+
 				cc.MaxAge = value;
 				ReplaceHeaderField("Cache-Control", cc.ToString());
 			}
 		}
-		
+
 		public SearchResponse() : base()
-		{}
-		
+		{ }
+
 		/// <summary>
 		/// SSDP search response (i.e. 200 OK HTTP response message)
 		/// </summary>

@@ -29,7 +29,7 @@ namespace NoreSources.SSDP
 				ReplaceHeaderField("NTS", value);
 			}
 		}
-		
+
 		/// <summary>
 		/// Notification subject (NT heeader field)
 		/// </summary>
@@ -45,7 +45,7 @@ namespace NoreSources.SSDP
 				ReplaceHeaderField("NT", value);
 			}
 		}
-		
+
 		/// <summary>
 		/// Unique ID of the device or service (USN header field)
 		/// </summary>
@@ -61,7 +61,7 @@ namespace NoreSources.SSDP
 				ReplaceHeaderField("USN", value);
 			}
 		}
-		
+
 		/// <summary>
 		/// Notification expiration delay (The max-age parameter value of the Cache-Control header field).
 		/// </summary>
@@ -72,24 +72,24 @@ namespace NoreSources.SSDP
 			get
 			{
 				string text = TryGetHeaderFieldValue("Cache-Control", "");
-				
+
 				if (text.Length > 0)
 				{
 					var cc = CacheControlHeaderValue.Parse(text);
-					
+
 					if (cc.MaxAge != null)
 					{
 						return (TimeSpan)cc.MaxAge;
 					}
 				}
-				
+
 				return new TimeSpan(0, 0, 30);
 			}
 			set
 			{
 				CacheControlHeaderValue cc = null;
 				string text = TryGetHeaderFieldValue("Cache-Control", "");
-				
+
 				if (text.Length > 0)
 				{
 					cc = CacheControlHeaderValue.Parse(text);
@@ -98,11 +98,11 @@ namespace NoreSources.SSDP
 				{
 					cc = new CacheControlHeaderValue();
 				}
-				
+
 				ReplaceHeaderField("Cache-Control", cc.ToString());
 			}
 		}
-		
+
 		public IPAddress Address
 		{
 			get
@@ -114,7 +114,7 @@ namespace NoreSources.SSDP
 				emitterAddress = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// NOTIFY SSDP request message
 		/// </summary>
@@ -122,25 +122,25 @@ namespace NoreSources.SSDP
 		public override string ToString()
 		{
 			string s = "NOTIFY * HTTP/1.1\r\n";
-			
+
 			if (!Headers.Contains("NTS"))
 			{
 				s += "NTS: " + NotificationType.Alive + "\r\n";
 			}
-			
+
 			return s + base.ToString();
 		}
-		
+
 		public object Clone()
 		{
 			return this.MemberwiseClone();
 		}
-		
+
 		public Notification() : base()
 		{
 			emitterAddress = IPAddress.None;
 		}
-		
+
 		private IPAddress emitterAddress;
 	}
 }
