@@ -809,7 +809,7 @@ namespace NoreSources.SSDP
 
 			try
 			{
-				length = multicastContext.socket.EndReceiveFrom(ar, ref endPoint);
+				length = context.EndReceiveFrom(ar, ref endPoint);
 			}
 			catch (ObjectDisposedException)
 			{
