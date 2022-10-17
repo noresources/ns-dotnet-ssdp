@@ -914,7 +914,7 @@ namespace NoreSources.SSDP
 		SocketContext clientContext;
 
 		private HTTP.Messages.Parser messageParser;
-		
+
 		private Queue<Message> messages;
 		private Dictionary<string, ProtocolNotification> applicationNotifications;
 		private Dictionary<string, ProtocolNotification> activeNotifications;
