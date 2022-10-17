@@ -865,7 +865,7 @@ namespace NoreSources.SSDP
 
 			try
 			{
-				length = multicastContext.socket.EndReceiveFrom(ar, ref endPoint);
+				length = context.socket.EndReceiveFrom(ar, ref endPoint);
 			}
 			catch (ObjectDisposedException)
 			{
