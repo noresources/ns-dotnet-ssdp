@@ -130,15 +130,19 @@ namespace NoreSources.HTTP.Messages
 		/// </summary>
 		/// <example>http://example.com</example>
 		/// <value>The base URL.</value>
-		public string BaseURL
+		public string DefaultBaseURI
 		{
 			get;
 			set;
 		}
 
-		public Parser()
+		public Parser(string baseURI = null)
 		{
-			BaseURL = "http://localhost";
+			if (baseURI != null)
+			{
+				DefaultBaseURI = baseURI;
+			}
+
 			string pattern = "^(" + Grammar.Token + ")"
 							 // TODO real request-uri pattern
 							 + " ([^ ]+)"
@@ -174,17 +178,17 @@ namespace NoreSources.HTTP.Messages
 					requestLine.Version = Version.Parse(match.Groups[3].ToString());
 
 					string requestURI = match.Groups[2].ToString();
-
-					if (requestURI != "*")
+					try
 					{
-						try
-						{
+						if (requestURI.Substring(0, 1) == "/"
+							 && DefaultBaseURI != null)
+							requestLine.RequestUri = new Uri(DefaultBaseURI + requestURI);
+						else
 							requestLine.RequestUri = new Uri(requestURI);
-						}
-						catch (Exception)
-						{
-							requestLine.RequestUri = new Uri(BaseURL + requestURI);
-						}
+					}
+					catch (Exception)
+					{
+						requestLine.RequestUri = null;
 					}
 				}
 
@@ -296,7 +300,7 @@ namespace NoreSources.HTTP.Messages
 
 			if (p < 0)
 			{
-				throw new ArgumentException("Incomplete message");
+				throw new ArgumentException("Incomplete message (missing CRLF)");
 			}
 
 			string requestLine = text.Substring(0, p + 2);
@@ -317,24 +321,31 @@ namespace NoreSources.HTTP.Messages
 			}
 
 			string requestURI = match.Groups[2].ToString();
-
-			try
-			{
-				if (requestURI != "*")
-				{
-					request.RequestUri = new Uri(requestURI);
-				};
-			}
-			catch (Exception)
-			{
-				request.RequestUri = new Uri(BaseURL + requestURI);
-			}
-
 			request.Method = new HttpMethod(match.Groups[1].ToString());
 			request.Version = Version.Parse(match.Groups[3].ToString());
 
 			var lines = text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
 			ParseHeaders(request.Headers, lines, 1);
+
+			string baseURI = DefaultBaseURI;
+
+			if (request.Headers.Contains("Host"))
+			{
+				baseURI = "http://" + Utility.GetFirstHeaderFieldValue(request.Headers, "Host");
+			}
+
+			try
+			{
+				if (requestURI.Substring(0, 1) == "/"
+							 && baseURI != null)
+					request.RequestUri = new Uri(baseURI + requestURI);
+				else
+					request.RequestUri = new Uri(requestURI);
+			}
+			catch (Exception)
+			{
+				request.RequestUri = new Uri(baseURI + requestURI);
+			}
 
 			if (content != null)
 			{
@@ -358,7 +369,7 @@ namespace NoreSources.HTTP.Messages
 
 			if (p < 0)
 			{
-				throw new ArgumentException("Incomplete message");
+				throw new ArgumentException("Incomplete message (missing CRLF)");
 			}
 
 			string statusLine = text.Substring(0, p + 2);

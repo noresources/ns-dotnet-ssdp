@@ -76,24 +76,9 @@ namespace NoreSources.SSDP
 			return Utility.First(values, fallback);
 		}
 
-		protected string TryGetHeaderFieldValue(string name, string glue, string fallback)
-		{
-			if (!Headers.Contains(name))
-			{
-				return fallback;
-			}
-
-			return String.Join(glue, headers.GetValues(name));
-		}
-
 		protected string GetHeaderFieldValue(string name)
 		{
-			return Utility.First(headers.GetValues(name), null);
-		}
-
-		protected string GetHeaderFieldValue(string name, string glue)
-		{
-			return String.Join(glue, headers.GetValues(name));
+			return NoreSources.HTTP.Utility.GetFirstHeaderFieldValue(headers, name, null);
 		}
 
 		private HttpHeaders headers;

@@ -49,6 +49,9 @@
     <Compile Include="..\..\src\NoreSources.HTTP\Messages.cs">
       <Link>src\NoreSources.HTTP\Messages.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\NoreSources.HTTP\Utility.cs">
+      <Link>src\NoreSources.HTTP\Utility.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\NoreSources.SSDP\AssemblyInfo.cs">
       <Link>src\NoreSources.SSDP\AssemblyInfo.cs</Link>
     </Compile>
