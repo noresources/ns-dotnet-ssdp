@@ -5,7 +5,7 @@
 
 for _,filepath in ipairs(os.matchfiles("../../src/examples/*.cs"))
 do
-	project (path.getname(filepath))
+	project (path.getbasename(filepath))
 		kind "ConsoleApp"
 		targetdir "../../bin"
 		language "C#"
