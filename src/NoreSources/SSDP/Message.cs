@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Net.Http.Headers;
+using NoreSources;
 
 namespace NoreSources.SSDP
 {
@@ -73,7 +74,7 @@ namespace NoreSources.SSDP
 				return fallback;
 			}
 
-			return Utility.First(values, fallback);
+			return Collections.Utility.First(values, fallback);
 		}
 
 		protected string GetHeaderFieldValue(string name)

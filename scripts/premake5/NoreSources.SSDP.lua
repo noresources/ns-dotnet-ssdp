@@ -9,8 +9,7 @@ project "NoreSources.SSDP"
 	language "C#"
 	dotnetframework "4.7"
 	files {
-		"../../src/NoreSources.SSDP/**.cs",
-		"../../src/NoreSources.HTTP/**cs"
+		"../../src/NoreSources/**.cs"
 	}
 	links { 
 		"System.dll" ,

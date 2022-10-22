@@ -46,29 +46,29 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\src\NoreSources.HTTP\Messages.cs">
-      <Link>src\NoreSources.HTTP\Messages.cs</Link>
+    <Compile Include="..\..\src\NoreSources\Collections\Utility.cs">
+      <Link>src\NoreSources\Collections\Utility.cs</Link>
     </Compile>
-    <Compile Include="..\..\src\NoreSources.HTTP\Utility.cs">
-      <Link>src\NoreSources.HTTP\Utility.cs</Link>
+    <Compile Include="..\..\src\NoreSources\HTTP\Messages.cs">
+      <Link>src\NoreSources\HTTP\Messages.cs</Link>
     </Compile>
-    <Compile Include="..\..\src\NoreSources.SSDP\AssemblyInfo.cs">
-      <Link>src\NoreSources.SSDP\AssemblyInfo.cs</Link>
+    <Compile Include="..\..\src\NoreSources\HTTP\Utility.cs">
+      <Link>src\NoreSources\HTTP\Utility.cs</Link>
     </Compile>
-    <Compile Include="..\..\src\NoreSources.SSDP\Message.cs">
-      <Link>src\NoreSources.SSDP\Message.cs</Link>
+    <Compile Include="..\..\src\NoreSources\SSDP\AssemblyInfo.cs">
+      <Link>src\NoreSources\SSDP\AssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\src\NoreSources.SSDP\Notification.cs">
-      <Link>src\NoreSources.SSDP\Notification.cs</Link>
+    <Compile Include="..\..\src\NoreSources\SSDP\Message.cs">
+      <Link>src\NoreSources\SSDP\Message.cs</Link>
     </Compile>
-    <Compile Include="..\..\src\NoreSources.SSDP\Protocol.cs">
-      <Link>src\NoreSources.SSDP\Protocol.cs</Link>
+    <Compile Include="..\..\src\NoreSources\SSDP\Notification.cs">
+      <Link>src\NoreSources\SSDP\Notification.cs</Link>
     </Compile>
-    <Compile Include="..\..\src\NoreSources.SSDP\Search.cs">
-      <Link>src\NoreSources.SSDP\Search.cs</Link>
+    <Compile Include="..\..\src\NoreSources\SSDP\Protocol.cs">
+      <Link>src\NoreSources\SSDP\Protocol.cs</Link>
     </Compile>
-    <Compile Include="..\..\src\NoreSources.SSDP\Utility.cs">
-      <Link>src\NoreSources.SSDP\Utility.cs</Link>
+    <Compile Include="..\..\src\NoreSources\SSDP\Search.cs">
+      <Link>src\NoreSources\SSDP\Search.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

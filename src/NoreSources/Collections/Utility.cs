@@ -6,7 +6,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NoreSources.SSDP
+namespace NoreSources.Collections
 {
 	internal class Utility
 	{
