@@ -1,6 +1,7 @@
 # Derived data
 obj
 /bin
+/build
 /tests
 /lib
 

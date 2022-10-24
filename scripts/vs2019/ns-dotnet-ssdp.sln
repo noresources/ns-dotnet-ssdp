@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoreSources.Build", "NoreSources.Build.csproj", "{9BDCF392-07F3-F128-506A-7D4ABCBFC2B0}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoreSources.SSDP", "NoreSources.SSDP.csproj", "{456E462B-3167-657D-5A99-4A0246F14489}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotifyAndSearch", "NotifyAndSearch.csproj", "{07EB2A13-7376-98D7-7C87-1BCCE891F4D7}"
@@ -11,6 +13,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9BDCF392-07F3-F128-506A-7D4ABCBFC2B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BDCF392-07F3-F128-506A-7D4ABCBFC2B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BDCF392-07F3-F128-506A-7D4ABCBFC2B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BDCF392-07F3-F128-506A-7D4ABCBFC2B0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{456E462B-3167-657D-5A99-4A0246F14489}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{456E462B-3167-657D-5A99-4A0246F14489}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{456E462B-3167-657D-5A99-4A0246F14489}.Release|Any CPU.ActiveCfg = Release|Any CPU
