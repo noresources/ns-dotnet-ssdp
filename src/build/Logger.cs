@@ -9,9 +9,10 @@ namespace NoreSources.Build
 	{
 		public override void Initialize(IEventSource eventSource)
 		{
-			Console.Out.WriteLine("Initialize " + Verbosity);
 			eventSource.ProjectStarted += new ProjectStartedEventHandler(
-			eventSource_ProjectStarted);
+					eventSource_ProjectStarted);
+			eventSource.MessageRaised += new BuildMessageEventHandler(
+					eventSource_MessageRaised);
 			eventSource.WarningRaised += new BuildWarningEventHandler(
 					eventSource_WarningRaised);
 			eventSource.ErrorRaised += new BuildErrorEventHandler(
@@ -40,7 +41,18 @@ namespace NoreSources.Build
 					object sender,
 					 BuildMessageEventArgs e)
 		{
-
+			switch (e.Importance)
+			{
+				case MessageImportance.Low:
+				case MessageImportance.Normal:
+					if (IsVerbosityAtLeast(LoggerVerbosity.Diagnostic))
+						Console.Out.WriteLine(e.Importance + ":" + e.Message);
+					break;
+				case MessageImportance.High:
+					if (IsVerbosityAtLeast(LoggerVerbosity.Detailed))
+						Console.Out.WriteLine(e.Importance + ":" + e.Message);
+					break;
+			}
 		}
 
 		void eventSource_TaskStarted(
@@ -53,7 +65,10 @@ namespace NoreSources.Build
 					object sender,
 					 ProjectStartedEventArgs e)
 		{
-			//Console.Out.WriteLine ("Starting " + e.ProjectFile);
+			if (IsVerbosityAtLeast(LoggerVerbosity.Detailed))
+			{
+				Console.Out.WriteLine("Starting " + e.ProjectFile);
+			}
 		}
 
 		void eventSource_ProjectFinished(
