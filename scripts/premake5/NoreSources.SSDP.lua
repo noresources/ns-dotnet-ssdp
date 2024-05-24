@@ -6,6 +6,7 @@
 project "NoreSources.SSDP"
 	kind "SharedLib"
 	targetdir "../../lib"
+	objdir "../../obj"
 	language "C#"
 	dotnetframework "4.7"
 	files {

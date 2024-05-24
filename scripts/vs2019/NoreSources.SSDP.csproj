@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <OutputPath>..\..\lib\</OutputPath>
-    <BaseIntermediateOutputPath>obj\Debug\NoreSources.SSDP\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>..\..\obj\Debug\NoreSources.SSDP\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -31,7 +31,7 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <OutputPath>..\..\lib\</OutputPath>
-    <BaseIntermediateOutputPath>obj\Release\NoreSources.SSDP\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>..\..\obj\Release\NoreSources.SSDP\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>

@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <OutputPath>..\..\build\</OutputPath>
-    <BaseIntermediateOutputPath>obj\Debug\NoreSources.Build\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>..\..\obj\Debug\NoreSources.Build\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -31,7 +31,7 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <OutputPath>..\..\build\</OutputPath>
-    <BaseIntermediateOutputPath>obj\Release\NoreSources.Build\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>..\..\obj\Release\NoreSources.Build\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>

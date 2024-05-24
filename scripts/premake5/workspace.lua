@@ -8,6 +8,7 @@ workspace "ns-dotnet-ssdp"
 	configurations {"Debug", "Release"}
 	location (path.join ("..", _ACTION))
 	targetdir ("../../bin")
+	objdir "../../obj"
 	
 	include "./NoreSources.Build.lua"
 	include "./NoreSources.SSDP.lua"

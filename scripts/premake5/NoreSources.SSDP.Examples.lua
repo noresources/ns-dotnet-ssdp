@@ -8,6 +8,7 @@ do
 	project (path.getbasename(filepath))
 		kind "ConsoleApp"
 		targetdir "../../bin"
+		objdir "../../obj"
 		language "C#"
 		files (filepath)
 		links { 
@@ -15,4 +16,10 @@ do
 			"System.dll",
 			"System.Net.Http.dll"
 		 }
+		 
+		 filter { "action:gmake2" }
+			 	postbuildcommands {
+			 		"{copyfile} %{cfg.linktarget.directory}/../lib/NoreSources.SSDP.dll %{cfg.linktarget.directory}"
+			 	}
+		 filter {}
 end

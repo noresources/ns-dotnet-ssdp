@@ -6,6 +6,7 @@
 project "NoreSources.Build"
 	kind "SharedLib"
 	targetdir "../../build"
+	objdir "../../obj"
 	language "C#"
 	dotnetframework "4.7"
 	files {

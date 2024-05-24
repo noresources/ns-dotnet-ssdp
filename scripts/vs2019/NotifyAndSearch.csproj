@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <OutputPath>..\..\bin\</OutputPath>
-    <BaseIntermediateOutputPath>obj\Debug\NotifyAndSearch\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>..\..\obj\Debug\NotifyAndSearch\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -31,7 +31,7 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <OutputPath>..\..\bin\</OutputPath>
-    <BaseIntermediateOutputPath>obj\Release\NotifyAndSearch\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>..\..\obj\Release\NotifyAndSearch\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
