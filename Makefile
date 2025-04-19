@@ -1,4 +1,4 @@
-cc = msbuild -nologo
+cc = dotnet build -nologo
 verbosity = normal
 
 .PHONY: all code-format
