@@ -8,7 +8,6 @@ project "NoreSources.SSDP"
 	targetdir "../../lib"
 	objdir "../../obj"
 	language "C#"
-	dotnetframework "4.7"
 	files {
 		"../../src/NoreSources/**.cs"
 	}

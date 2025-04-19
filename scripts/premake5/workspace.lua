@@ -9,6 +9,10 @@ workspace "ns-dotnet-ssdp"
 	location (path.join ("..", _ACTION))
 	targetdir ("../../bin")
 	objdir "../../obj"
+	dotnetframework "net8.0"
+	vsprops {
+		TargetFrameworks = "net47;net8.0"
+	}
 	
 	include "./NoreSources.Build.lua"
 	include "./NoreSources.SSDP.lua"

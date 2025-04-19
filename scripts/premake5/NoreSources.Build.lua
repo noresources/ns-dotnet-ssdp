@@ -8,7 +8,6 @@ project "NoreSources.Build"
 	targetdir "../../build"
 	objdir "../../obj"
 	language "C#"
-	dotnetframework "4.7"
 	files {
 		"../../src/build/**.cs"
 	}
