@@ -1,11 +1,35 @@
-cc = dotnet build -nologo
-verbosity = normal
+SOLUTION := scripts/vs2019/ns-dotnet-ssdp.sln
 
-.PHONY: all code-format
+ifndef verbosity
+	verbosity = normal
+endif
 
-all: 
-	@$(MAKE) -C scripts/gmake2
+ifndef configuration
+	configuration = Release
+endif
+
+ifndef framework
+	framework = net8.0
+endif
+
+dotnet_options = -nologo \
+	--configuration $(configuration) \
+	--framework $(framework) \
+	--verbosity $(verbosity)
+
+.PHONY: all assemblyinfo build code-format publish
+
+all: assemblyinfo build publish
+
+build: 
+	@dotnet build $(dotnet_options) "$(SOLUTION)"
+
+publish: 
+	@dotnet publish $(dotnet_options) "$(SOLUTION)"
+
+assemblyinfo: 
+	@premake5 --file=scripts/premake5.lua assemblyinfo
 
 code-format:
-	@dotnet format scripts/vs2019/ns-dotnet-ssdp.sln --no-restore 1>/dev/null
+	@dotnet format "$(SOLUTION)"
 

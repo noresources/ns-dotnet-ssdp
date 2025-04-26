@@ -17,7 +17,7 @@ do
 			"System.Net.Http.dll"
 		 }
 		 
-		 filter { "action:gmake2" }
+		 filter { "action:gmake" }
 			 	postbuildcommands {
 			 		"{copyfile} %{cfg.linktarget.directory}/../lib/NoreSources.SSDP.dll %{cfg.linktarget.directory}"
 			 	}

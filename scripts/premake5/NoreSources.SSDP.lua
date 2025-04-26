@@ -9,8 +9,18 @@ project "NoreSources.SSDP"
 	objdir "../../obj"
 	language "C#"
 	files {
-		"../../src/NoreSources/**.cs"
+		"../../src/NoreSources/HTTP/**.cs",
+		"../../src/NoreSources/Collections/**.cs",
+		"../../src/NoreSources/SSDP/*.cs"
 	}
+	
+	filter { "action:gmake" }
+		files {
+			"../../src/NoreSources/SSDP/AssemblyInfo/AssemblyInfo.cs"
+		}
+	filter {}
+	vsprops (include ("./NoreSources.SSDP.AssemblyInfo.lua"))
+	
 	links { 
 		"System.dll" ,
 		"System.Net.Http.dll"

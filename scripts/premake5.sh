@@ -5,7 +5,7 @@
 ##########################################################"
  
 cd "$(dirname "${0}")"
-for action in vs2019 gmake2
+for action in vs2019 gmake
 do
 	premake5 --dotnet=msnet  ${action}
 done
