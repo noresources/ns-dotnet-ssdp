@@ -13,7 +13,7 @@ endif
 ifeq ($(config),debug)
   CSC = csc
   RESGEN = resgen
-TARGETDIR = ../../lib
+TARGETDIR = ../../lib/Debug
 TARGET = $(TARGETDIR)/NoreSources.SSDP.dll
 OBJDIR = ../../obj/Debug/NoreSources.SSDP
   FLAGS = /noconfig
@@ -30,7 +30,7 @@ endif
 ifeq ($(config),release)
   CSC = csc
   RESGEN = resgen
-TARGETDIR = ../../lib
+TARGETDIR = ../../lib/Release
 TARGET = $(TARGETDIR)/NoreSources.SSDP.dll
 OBJDIR = ../../obj/Release/NoreSources.SSDP
   FLAGS = /noconfig

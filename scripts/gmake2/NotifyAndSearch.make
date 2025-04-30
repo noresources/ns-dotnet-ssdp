@@ -13,38 +13,38 @@ endif
 ifeq ($(config),debug)
   CSC = csc
   RESGEN = resgen
-TARGETDIR = ../../bin
+TARGETDIR = ../../bin/Debug
 TARGET = $(TARGETDIR)/NotifyAndSearch.exe
 OBJDIR = ../../obj/Debug/NotifyAndSearch
   FLAGS = /noconfig
-  DEPENDS = ../../lib/NoreSources.SSDP.dll
-  REFERENCES = /r:../../lib/NoreSources.SSDP.dll
+  DEPENDS = ../../lib/Debug/NoreSources.SSDP.dll
+  REFERENCES = /r:../../lib/Debug/NoreSources.SSDP.dll
 define PREBUILDCMDS
 endef
 define PRELINKCMDS
 endef
 define POSTBUILDCMDS
 	@echo Running postbuild commands
-	cp -f ../../lib/NoreSources.SSDP.dll ../../bin
+	cp -f ../../bin/lib/NoreSources.SSDP.dll ../../bin/Debug
 endef
 endif
 
 ifeq ($(config),release)
   CSC = csc
   RESGEN = resgen
-TARGETDIR = ../../bin
+TARGETDIR = ../../bin/Release
 TARGET = $(TARGETDIR)/NotifyAndSearch.exe
 OBJDIR = ../../obj/Release/NotifyAndSearch
   FLAGS = /noconfig
-  DEPENDS = ../../lib/NoreSources.SSDP.dll
-  REFERENCES = /r:../../lib/NoreSources.SSDP.dll
+  DEPENDS = ../../lib/Release/NoreSources.SSDP.dll
+  REFERENCES = /r:../../lib/Release/NoreSources.SSDP.dll
 define PREBUILDCMDS
 endef
 define PRELINKCMDS
 endef
 define POSTBUILDCMDS
 	@echo Running postbuild commands
-	cp -f ../../lib/NoreSources.SSDP.dll ../../bin
+	cp -f ../../bin/lib/NoreSources.SSDP.dll ../../bin/Release
 endef
 endif
 

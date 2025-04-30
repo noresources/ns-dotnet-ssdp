@@ -5,7 +5,7 @@
 
 project "NoreSources.SSDP"
 	kind "SharedLib"
-	targetdir "../../lib"
+	targetdir "../../lib/%{cfg.name}"
 	objdir "../../obj"
 	language "C#"
 	files {

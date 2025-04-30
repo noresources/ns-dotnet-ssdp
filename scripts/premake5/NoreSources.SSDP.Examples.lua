@@ -7,7 +7,7 @@ for _,filepath in ipairs(os.matchfiles("../../src/examples/*.cs"))
 do
 	project (path.getbasename(filepath))
 		kind "ConsoleApp"
-		targetdir "../../bin"
+		targetdir "../../bin/%{cfg.name}"
 		objdir "../../obj"
 		language "C#"
 		files (filepath)

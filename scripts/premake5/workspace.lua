@@ -7,7 +7,6 @@ workspace "ns-dotnet-ssdp"
 	
 	configurations {"Debug", "Release"}
 	location (path.join ("..", _ACTION))
-	targetdir ("../../bin")
 	objdir "../../obj"
 	dotnetframework "net8.0"
 	vsprops {

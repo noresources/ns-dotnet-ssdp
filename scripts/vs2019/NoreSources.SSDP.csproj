@@ -10,7 +10,7 @@
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\lib\</OutputPath>
+    <OutputPath>..\..\lib\Debug\</OutputPath>
     <IntermediateOutputPath>..\..\obj\Debug\NoreSources.SSDP\</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -22,7 +22,7 @@
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\lib\</OutputPath>
+    <OutputPath>..\..\lib\Release\</OutputPath>
     <IntermediateOutputPath>..\..\obj\Release\NoreSources.SSDP\</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
