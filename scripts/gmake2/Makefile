@@ -9,12 +9,10 @@ ifndef verbose
 endif
 
 ifeq ($(config),debug)
-  NoreSources.Build_config = debug
   NoreSources.SSDP_config = debug
   NotifyAndSearch_config = debug
 
 else ifeq ($(config),release)
-  NoreSources.Build_config = release
   NoreSources.SSDP_config = release
   NotifyAndSearch_config = release
 
@@ -22,17 +20,11 @@ else
   $(error "invalid configuration $(config)")
 endif
 
-PROJECTS := NoreSources.Build NoreSources.SSDP NotifyAndSearch
+PROJECTS := NoreSources.SSDP NotifyAndSearch
 
 .PHONY: all clean help $(PROJECTS) 
 
 all: $(PROJECTS)
-
-NoreSources.Build:
-ifneq (,$(NoreSources.Build_config))
-	@echo "==== Building NoreSources.Build ($(NoreSources.Build_config)) ===="
-	@${MAKE} --no-print-directory -C . -f NoreSources.Build.make config=$(NoreSources.Build_config)
-endif
 
 NoreSources.SSDP:
 ifneq (,$(NoreSources.SSDP_config))
@@ -47,7 +39,6 @@ ifneq (,$(NotifyAndSearch_config))
 endif
 
 clean:
-	@${MAKE} --no-print-directory -C . -f NoreSources.Build.make clean
 	@${MAKE} --no-print-directory -C . -f NoreSources.SSDP.make clean
 	@${MAKE} --no-print-directory -C . -f NotifyAndSearch.make clean
 
@@ -61,7 +52,6 @@ help:
 	@echo "TARGETS:"
 	@echo "   all (default)"
 	@echo "   clean"
-	@echo "   NoreSources.Build"
 	@echo "   NoreSources.SSDP"
 	@echo "   NotifyAndSearch"
 	@echo ""

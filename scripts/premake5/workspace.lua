@@ -13,6 +13,5 @@ workspace "ns-dotnet-ssdp"
 		TargetFrameworks = "net47;net8.0"
 	}
 	
-	include "./NoreSources.Build.lua"
 	include "./NoreSources.SSDP.lua"
 	include "./NoreSources.SSDP.Examples.lua"
