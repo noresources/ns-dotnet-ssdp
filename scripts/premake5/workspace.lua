@@ -9,9 +9,12 @@ workspace "ns-dotnet-ssdp"
 	location (path.join ("..", _ACTION))
 	objdir "../../obj"
 	dotnetframework "net8.0"
-	vsprops {
-		TargetFrameworks = "net47;net8.0"
-	}
+	filter {"action:vs*"}
+		location (path.join ("..", _ACTION, '%{prj and prj.name or "."}'))
+		vsprops {
+			TargetFrameworks = "net47;net8.0"
+		}
+	filter {}
 	
 	include "./NoreSources.SSDP.lua"
 	include "./NoreSources.SSDP.Examples.lua"

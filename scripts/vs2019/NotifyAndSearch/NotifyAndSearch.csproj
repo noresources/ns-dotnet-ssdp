@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <TargetFramework>net8.0</TargetFramework>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
@@ -10,8 +10,8 @@
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\lib\Debug\</OutputPath>
-    <IntermediateOutputPath>..\..\obj\Debug\NoreSources.SSDP\</IntermediateOutputPath>
+    <OutputPath>..\..\..\bin\Debug\</OutputPath>
+    <IntermediateOutputPath>..\..\..\obj\Debug\NotifyAndSearch\</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -22,8 +22,8 @@
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\lib\Release\</OutputPath>
-    <IntermediateOutputPath>..\..\obj\Release\NoreSources.SSDP\</IntermediateOutputPath>
+    <OutputPath>..\..\..\bin\Release\</OutputPath>
+    <IntermediateOutputPath>..\..\..\obj\Release\NotifyAndSearch\</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -38,26 +38,14 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\src\NoreSources\Collections\Utility.cs">
-      <Link>src\NoreSources\Collections\Utility.cs</Link>
+    <Compile Include="..\..\..\src\examples\NotifyAndSearch.cs">
+      <Link>src\examples\NotifyAndSearch.cs</Link>
     </Compile>
-    <Compile Include="..\..\src\NoreSources\HTTP\Messages.cs">
-      <Link>src\NoreSources\HTTP\Messages.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\NoreSources\HTTP\Utility.cs">
-      <Link>src\NoreSources\HTTP\Utility.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\NoreSources\SSDP\Message.cs">
-      <Link>src\NoreSources\SSDP\Message.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\NoreSources\SSDP\Notification.cs">
-      <Link>src\NoreSources\SSDP\Notification.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\NoreSources\SSDP\Protocol.cs">
-      <Link>src\NoreSources\SSDP\Protocol.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\NoreSources\SSDP\Search.cs">
-      <Link>src\NoreSources\SSDP\Search.cs</Link>
-    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NoreSources.SSDP\NoreSources.SSDP.csproj">
+      <Project>{456E462B-3167-657D-5A99-4A0246F14489}</Project>
+      <Name>NoreSources.SSDP</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
