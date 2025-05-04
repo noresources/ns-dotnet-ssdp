@@ -35,4 +35,5 @@ assemblyinfo:
 
 code-format:
 	@dotnet format "$(SOLUTION)"
+	@dotnet format src/NoreSources/SSDP/AssemblyInfo
 
