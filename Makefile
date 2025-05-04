@@ -19,7 +19,7 @@ dotnet_options = -nologo \
 
 .PHONY: all assemblyinfo build code-format publish
 
-all: assemblyinfo build publish
+all: assemblyinfo build
 
 build: 
 	@dotnet build $(dotnet_options) "$(SOLUTION)"
@@ -28,7 +28,10 @@ publish:
 	@dotnet publish $(dotnet_options) "$(SOLUTION)"
 
 assemblyinfo: 
+	@echo Generate AssemblyInfo.cs
 	@premake5 --file=scripts/premake5.lua assemblyinfo
+	@echo Code format file
+	@dotnet format src/NoreSources/SSDP/AssemblyInfo
 
 code-format:
 	@dotnet format "$(SOLUTION)"

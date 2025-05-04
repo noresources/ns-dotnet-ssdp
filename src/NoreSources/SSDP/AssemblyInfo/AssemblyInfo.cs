@@ -5,7 +5,7 @@
 using System.Reflection;
 
 
+[assembly: AssemblyVersion("0.5.3")]
 [assembly: AssemblyTitle("NoreSources SSDP library")]
-[assembly: AssemblyVersion("0.5.2")]
-[assembly: AssemblyDescription(".Net implementation of the SSDP protocol")]
 [assembly: AssemblyCopyright("© 2022 Renaud Guillard")]
+[assembly: AssemblyDescription(".Net implementation of the SSDP protocol")]

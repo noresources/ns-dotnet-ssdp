@@ -4,8 +4,8 @@ local HEADER_FILENAME = path.join(ACTION_DIR,
 			"resources/templates/AssemblyInfo.cs.header")
 		
 local DATA_FILENAME = path.join(ACTION_DIR, 
-			"..", 
-			"NoreSources.SSDP.AssemblyInfo.lua")
+			"../../..", 
+			"resources/data/AssemblyInfo.lua")
 local DATA = include (DATA_FILENAME)
 		
 local TARGET_FILENAME = path.join(ACTION_DIR, 
@@ -29,6 +29,7 @@ newaction {
 				.. "[assembly: " .. k 
 				.. "(\"" .. premake.esc(v) .. "\")]"
 		end
+		content = content .. "\n"
 		os.writefile_ifnotequal (content, TARGET_FILENAME)
 	end
 }
