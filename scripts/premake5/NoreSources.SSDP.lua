@@ -19,7 +19,7 @@ project "NoreSources.SSDP"
 			"../../src/NoreSources/SSDP/AssemblyInfo/AssemblyInfo.cs"
 		}
 	filter {}
-	vsprops (include ("../../resources/data/AssemblyInfo.lua"))
+	vsprops (dofile("../../resources/data/AssemblyInfo.lua"))
 	
 	links { 
 		"System.dll" ,

@@ -16,6 +16,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TargetFrameworks>net47;net8.0</TargetFrameworks>
+    <AssemblyCopyright>© 2022 Renaud Guillard</AssemblyCopyright>
+    <AssemblyDescription>.Net implementation of the SSDP protocol</AssemblyDescription>
+    <AssemblyTitle>NoreSources SSDP library</AssemblyTitle>
+    <AssemblyVersion>0.5.3</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -28,6 +32,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TargetFrameworks>net47;net8.0</TargetFrameworks>
+    <AssemblyCopyright>© 2022 Renaud Guillard</AssemblyCopyright>
+    <AssemblyDescription>.Net implementation of the SSDP protocol</AssemblyDescription>
+    <AssemblyTitle>NoreSources SSDP library</AssemblyTitle>
+    <AssemblyVersion>0.5.3</AssemblyVersion>
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <Reference Include="System" />
