@@ -17,12 +17,15 @@ dotnet_options = -nologo \
 	--framework $(framework) \
 	--verbosity $(verbosity)
 
-.PHONY: all assemblyinfo build code-format publish
+.PHONY: all assemblyinfo build build-scripts clean code-format publish
 
 all: assemblyinfo build
 
 build: 
 	@dotnet build $(dotnet_options) "$(SOLUTION)"
+
+clean: 
+	@dotnet clean $(dotnet_options) "$(SOLUTION)"
 
 publish: 
 	@dotnet publish $(dotnet_options) "$(SOLUTION)"
@@ -33,6 +36,10 @@ assemblyinfo:
 	@echo Code format file
 	@dotnet format src/NoreSources/SSDP/AssemblyInfo
 
+build-scripts:
+	@premake5 --file=scripts/premake5.lua gmake
+	@premake5 --file=scripts/premake5.lua vs2019
+	
 code-format:
 	@dotnet format "$(SOLUTION)"
 	@dotnet format src/NoreSources/SSDP/AssemblyInfo
