@@ -798,7 +798,23 @@ namespace NoreSources.SSDP
 
 		private void MessageReceptionCallback(IAsyncResult ar)
 		{
-			(ar.AsyncState as SocketContext).self.HandleMessageReception(ar);
+			try
+			{
+				(ar.AsyncState as SocketContext).self.HandleMessageReception(ar);
+			}
+			catch (SocketException e)
+			{
+				switch (e.SocketErrorCode)
+				{
+					case SocketError.OperationAborted:
+					case SocketError.Interrupted:
+					case SocketError.Shutdown:
+					case SocketError.Disconnecting:
+						return;
+					default:
+						throw e;
+				}
+			}
 		}
 
 		private void HandleMessageReception(IAsyncResult ar)
