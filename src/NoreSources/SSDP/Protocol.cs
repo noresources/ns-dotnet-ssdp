@@ -812,7 +812,7 @@ namespace NoreSources.SSDP
 					case SocketError.Disconnecting:
 						return;
 					default:
-						throw e;
+						throw;
 				}
 			}
 		}
