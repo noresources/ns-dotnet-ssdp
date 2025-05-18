@@ -103,6 +103,9 @@ namespace NoreSources.SSDP
 			}
 		}
 
+		/// <summary>
+		/// Emitter IP Address
+		/// </summary>
 		public IPAddress Address
 		{
 			get

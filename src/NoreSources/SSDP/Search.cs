@@ -52,6 +52,9 @@ namespace NoreSources.SSDP
 			}
 		}
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public SearchRequest() : base()
 		{
 			endPoint = null;

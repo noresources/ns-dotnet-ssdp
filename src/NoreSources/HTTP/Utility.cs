@@ -12,6 +12,13 @@ namespace NoreSources.HTTP
 {
 	public class Utility
 	{
+		/// <summary>
+		/// Gets the first value of a given header field.
+		/// </summary>
+		/// <param name="headers">Header map</param>
+		/// <param name="name">Header field name</param>
+		/// <param name="fallback">Value to return if header map does not contain any occurence of the header field.</param>
+		/// <returns>First value of the header field if any. Otherwise, fallback</returns>
 		public static string GetFirstHeaderFieldValue(
 				HttpHeaders headers,
 				string name,

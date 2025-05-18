@@ -49,7 +49,11 @@ namespace NoreSources.SSDP
 		{
 			return headers.ToString().ReplaceLineEndings("\r\n");
 		}
-
+		/// <summary>
+		/// Add or replace a header field value
+		/// </summary>
+		/// <param name="name">Header field name.</param>
+		/// <param name="value">New header value</param>
 		protected void ReplaceHeaderField(string name, string value)
 		{
 			if (Headers.Contains(name))
@@ -60,6 +64,12 @@ namespace NoreSources.SSDP
 			headers.Add(name, value);
 		}
 
+		/// <summary>
+		/// Gets a header value if exists.
+		/// </summary>
+		/// <param name="name">Header field name</param>
+		/// <param name="fallback">Value to return if header field could not be found.</param>
+		/// <returns>First header value if any. Otherwise, returns fallback.</returns>
 		protected string TryGetHeaderFieldValue(string name, string fallback = null)
 		{
 			if (!Headers.Contains(name))
@@ -77,6 +87,11 @@ namespace NoreSources.SSDP
 			return Collections.Utility.First(values, fallback);
 		}
 
+		/// <summary>
+		/// Gets the first header field value
+		/// </summary>
+		/// <param name="name">Header field name.</param>
+		/// <returns>Header field value.</returns>
 		protected string GetHeaderFieldValue(string name)
 		{
 			return NoreSources.HTTP.Utility.GetFirstHeaderFieldValue(headers, name, null);
