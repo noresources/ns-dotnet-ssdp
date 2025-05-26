@@ -47,7 +47,7 @@ namespace NoreSources.SSDP
 		/// <returns>RFC 2616 representation of HTTP header fields</returns>
 		public override string ToString()
 		{
-			return headers.ToString().ReplaceLineEndings("\r\n") + "\r\n";
+			return HTTP.Utility.NormalizeHeaderLineEndings(headers.ToString()) + "\r\n";
 		}
 		/// <summary>
 		/// Add or replace a header field value
@@ -94,7 +94,7 @@ namespace NoreSources.SSDP
 		/// <returns>Header field value.</returns>
 		protected string GetHeaderFieldValue(string name)
 		{
-			return NoreSources.HTTP.Utility.GetFirstHeaderFieldValue(headers, name, null);
+			return HTTP.Utility.GetFirstHeaderFieldValue(headers, name, null);
 		}
 
 		private HttpHeaders headers;

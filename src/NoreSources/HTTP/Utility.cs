@@ -33,5 +33,12 @@ namespace NoreSources.HTTP
 
 			return e.Current;
 		}
+
+		public static string NormalizeHeaderLineEndings(string header)
+		{
+			return header.Replace("\r\n", "\n")
+			.Replace("\r", "\n")
+			.Replace("\n", "\r\n");
+		}
 	}
 }
