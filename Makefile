@@ -17,7 +17,7 @@ dotnet_options = -nologo \
 	--framework $(framework) \
 	--verbosity $(verbosity)
 
-.PHONY: all assemblyinfo build build-scripts clean code-format publish
+.PHONY: all assemblyinfo build build-scripts clean code-format gmake vs
 
 all: assemblyinfo build
 
@@ -27,18 +27,20 @@ build:
 clean: 
 	@dotnet clean $(dotnet_options) "$(SOLUTION)"
 
-publish: 
-	@dotnet publish $(dotnet_options) "$(SOLUTION)"
-
 assemblyinfo: 
 	@echo Generate AssemblyInfo.cs
 	@premake5 --file=scripts/premake5.lua assemblyinfo
 	@echo Code format file
 	@dotnet format src/NoreSources/SSDP/AssemblyInfo
 
-build-scripts:
+gmake:
 	@premake5 --file=scripts/premake5.lua gmake
+
+vs:
 	@premake5 --file=scripts/premake5.lua vs2019
+	
+build-scripts: vs gmake
+	@echo 'Visual Studio projects & GNU Makefile generated'
 	
 code-format:
 	@dotnet format "$(SOLUTION)"

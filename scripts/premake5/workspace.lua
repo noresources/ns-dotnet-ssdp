@@ -12,7 +12,7 @@ workspace "ns-dotnet-ssdp"
 	filter {"action:vs*"}
 		location (path.join ("..", _ACTION, '%{prj and prj.name or "."}'))
 		vsprops {
-			TargetFrameworks = "net47;net8.0"
+			TargetFrameworks = "net47;net8.0;net9.0"
 		}
 	filter {}
 	
