@@ -8,7 +8,7 @@ workspace "ns-dotnet-ssdp"
 	configurations {"Debug", "Release"}
 	location (path.join ("..", _ACTION))
 	objdir "../../obj"
-	dotnetframework "net8.0"
+	dotnetframework "net9.0"
 	filter {"action:vs*"}
 		location (path.join ("..", _ACTION, '%{prj and prj.name or "."}'))
 		vsprops {
