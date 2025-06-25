@@ -794,6 +794,11 @@ namespace NoreSources.SSDP
 				// Socket closed
 				return;
 			}
+			catch (SocketException)
+			{
+				// Socket closed
+				return;
+			}
 		}
 
 		private void MessageReceptionCallback(IAsyncResult ar)
